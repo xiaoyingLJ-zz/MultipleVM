@@ -148,7 +148,7 @@
       },
       "copy":{
         "name": "templatecopy",
-        "count": "[parameters('vmlables')]"
+        "count": "[parameters('gatewaycount')]"
       }
     }
   ]
