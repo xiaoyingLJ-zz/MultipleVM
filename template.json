@@ -78,9 +78,30 @@
     }
   },
   "variables": {
-     "templatelink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/',parameters('Create new VNET or use Existing'),'vnet.json')]"
+    "vnetlink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/',parameters('Create new VNET or use Existing'),'vnet.json')]",
+    "templatelink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/', 'existingvnet-azuredeploy-vm.json')]"
   },
   "resources": [
+    {
+      "apiVersion": "2015-01-01",
+      "name": "[concat(parameters('Name'), 'vnetTemplate')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "[variables('vnetlink')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "Name": {
+            "value": "[parameters('Name')]"
+          },
+          "virtualNetworkName/subnetName":{
+            "value": "[parameters('virtualNetworkName/subnetName')]"
+          }
+        }
+      }
+    },
     {
       "apiVersion": "2015-01-01",
       "name": "[concat(parameters('Name'), 'Template')]",
@@ -94,6 +115,27 @@
         "parameters": {
           "Name": {
             "value": "[parameters('Name')]"
+          },     
+          "Size": {
+            "value": "[parameters('Size')]"
+          },
+          "User name": {
+            "value": "[parameters('User name')]"
+          },
+          "Password": {
+            "value": "[parameters('Password')]"
+          },
+          "windowsOSVersion": {
+            "value": "[parameters('windowsOSVersion')]"
+          },
+          "dnsLabelPrefix": {
+            "value": "[parameters('dnsLabelPrefix')]"
+          },
+          "gatewayKey": {
+            "value": "[parameters('gatewayKey')]"
+          },
+          "networkSecurityGroupName": {
+            "value": "[concat(parameters('Name'),'nsg', parameters('open gateway port'))]"
           },
           "virtualNetworkName/subnetName":{
             "value": "[parameters('virtualNetworkName/subnetName')]"
