@@ -78,7 +78,7 @@
     }
   },
   "variables": {
-     "templatelink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/CreateGWVM/master/',parameters('Create new VNET or use Existing'),'vnet-azuredeploy-vm.json')]"
+     "templatelink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/',parameters('Create new VNET or use Existing'),'vnet.json')]"
   },
   "resources": [
     {
@@ -94,27 +94,6 @@
         "parameters": {
           "Name": {
             "value": "[parameters('Name')]"
-          },        
-          "Size": {
-            "value": "[parameters('Size')]"
-          },
-          "User name": {
-            "value": "[parameters('User name')]"
-          },
-          "Password": {
-            "value": "[parameters('Password')]"
-          },
-          "windowsOSVersion": {
-            "value": "[parameters('windowsOSVersion')]"
-          },
-          "dnsLabelPrefix": {
-            "value": "[parameters('dnsLabelPrefix')]"
-          },
-          "gatewayKey": {
-            "value": "[parameters('gatewayKey')]"
-          },
-          "open gateway port": {
-            "value": "[parameters('open gateway port')]"
           },
           "virtualNetworkName/subnetName":{
             "value": "[parameters('virtualNetworkName/subnetName')]"
