@@ -51,6 +51,9 @@
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
     },
+    "gatewaycount":{
+      "type":"int",
+    },
     "gatewayKey": {
       "type": "securestring",
       "metadata":{
@@ -79,7 +82,8 @@
   },
   "variables": {
     "vnetlink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/',parameters('Create new VNET or use Existing'),'vnet.json')]",
-    "templatelink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/', 'existingvnet-azuredeploy-vm.json')]"
+    "templatelink": "[concat('https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/', 'existingvnet-azuredeploy-vm.json')]",
+    "vmlables": ["one","two","three","four"]
   },
   "resources": [
     {
@@ -104,7 +108,7 @@
     },
     {
       "apiVersion": "2015-01-01",
-      "name": "[concat(parameters('Name'), 'Template')]",
+      "name": "[concat(parameters('Name'), 'Template',variables('vmlables')[copyIndex()])]",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "incremental",
@@ -114,7 +118,7 @@
         },
         "parameters": {
           "Name": {
-            "value": "[parameters('Name')]"
+            "value": "[concat(parameters('Name'),variables('vmlables')[copyIndex()])]"
           },     
           "Size": {
             "value": "[parameters('Size')]"
@@ -129,7 +133,7 @@
             "value": "[parameters('windowsOSVersion')]"
           },
           "dnsLabelPrefix": {
-            "value": "[parameters('dnsLabelPrefix')]"
+            "value": "[concat(parameters('dnsLabelPrefix'),variables('vmlables')[copyIndex()])]"
           },
           "gatewayKey": {
             "value": "[parameters('gatewayKey')]"
@@ -141,6 +145,10 @@
             "value": "[parameters('virtualNetworkName/subnetName')]"
           }
         }
+      },
+      "copy":{
+        "name": "templatecopy",
+        "count": "[parameters('vmlables')]"
       }
     }
   ]

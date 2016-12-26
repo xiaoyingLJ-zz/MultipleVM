@@ -38,7 +38,7 @@
     "storageAccountName": "[take(concat(toLower(parameters('Name')), uniquestring(resourceGroup().id)), 24)]",
     "nicName": "[concat(parameters('Name'), 'Nic')]",
     "publicIPAddressName": "[concat(parameters('Name'), '-ip')]",
-    "scriptURL": "https://raw.githubusercontent.com/xiaoyingLJ/createVM/master/gatewayInstall.ps1",
+    "scriptURL": "https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/HAgatewayInstall.ps1",
     "scriptParameters": "[concat('-gatewayKey ', parameters('gatewayKey'))]"
   },
   "resources": [
