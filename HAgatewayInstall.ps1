@@ -97,7 +97,7 @@ function Download-Gateway([string] $url, [string] $gwPath)
     {
         $ErrorActionPreference = "Stop";
         $client = New-Object System.Net.WebClient
-        $client.DownloadFile($downloadPath, $gwPath)
+        $client.DownloadFile($url, $gwPath)
         Trace-Log "Download gateway successfully. Gateway loc: $gwPath"
     }
     catch
