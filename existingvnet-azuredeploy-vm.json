@@ -35,10 +35,11 @@
     "virtualNetworkName": "[variables('vnetSettings')[0]]",
     "subnetName": "[variables('vnetSettings')[1]]",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
-    "storageAccountName": "[take(concat(toLower(parameters('Name')), uniquestring(resourceGroup().id)), 24)]",
+    "storageAccountName": "[concat('gw', uniquestring(resourceGroup().id, parameters('Name')))]",
+    "diagnosticStorageName": "[concat('gwdiag', uniquestring(resourceGroup().id, parameters('Name')))]",
     "nicName": "[concat(parameters('Name'), 'Nic')]",
     "publicIPAddressName": "[concat(parameters('Name'), '-ip')]",
-    "scriptURL": "https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/HAgatewayInstall.ps1",
+    "scriptURL": "https://raw.githubusercontent.com/xiaoyingLJ/GatewayVM/master/gatewayInstall.ps1",
     "scriptParameters": "[concat('-gatewayKey ', parameters('gatewayKey'))]"
   },
   "resources": [
@@ -54,6 +55,17 @@
       "properties": {}
     },
     {
+      "name": "[variables('diagnosticStorageName')]",
+	  "type": "Microsoft.Storage/storageAccounts",
+	  "apiVersion": "2016-01-01",
+	  "location": "[resourceGroup().location]",
+	  "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "Storage",
+      "properties": {}
+	},
+    {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressName')]",
@@ -61,7 +73,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[concat(parameters('dnsLabelPrefix'), uniquestring(resourceGroup().id))]"
+          "domainNameLabel": "[concat(parameters('dnsLabelPrefix'), '-', uniquestring(resourceGroup().id, parameters('dnsLabelPrefix'), parameters('Name')))]"
         }
       }
     },
@@ -100,6 +112,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts/', variables('diagnosticStorageName'))]",
         "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
       "properties": {
@@ -147,7 +160,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": "true",
-            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob]"
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('diagnosticStorageName'))).primaryEndpoints.blob]"
           }
         }
       }
@@ -168,7 +181,7 @@
         "autoUpgradeMinorVersion":true,
         "settings": {
           "fileUris": [ "[variables('scriptURL')]"],
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File HAgatewayInstall.ps1 ', variables('scriptParameters'), ' -vmdnsname ', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File gatewayInstall.ps1 ', variables('scriptParameters'), ' -vmdnsname ', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
         }
       }
     }
