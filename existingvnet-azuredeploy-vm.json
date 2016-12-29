@@ -39,7 +39,7 @@
     "diagnosticStorageName": "[concat('gwdiag', uniquestring(resourceGroup().id, parameters('Name')))]",
     "nicName": "[concat(parameters('Name'), 'Nic')]",
     "publicIPAddressName": "[concat(parameters('Name'), '-ip')]",
-    "scriptURL": "https://raw.githubusercontent.com/xiaoyingLJ/GatewayVM/master/gatewayInstall.ps1",
+    "scriptURL": "https://raw.githubusercontent.com/xiaoyingLJ/MultipleVM/master/HAgatewayInstall.ps1",
     "scriptParameters": "[concat('-gatewayKey ', parameters('gatewayKey'))]"
   },
   "resources": [
@@ -181,7 +181,7 @@
         "autoUpgradeMinorVersion":true,
         "settings": {
           "fileUris": [ "[variables('scriptURL')]"],
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File gatewayInstall.ps1 ', variables('scriptParameters'), ' -vmdnsname ', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File HAgatewayInstall.ps1 ', variables('scriptParameters'), ' -vmdnsname ', reference(variables('publicIPAddressName')).dnsSettings.fqdn)]"
         }
       }
     }
