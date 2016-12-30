@@ -73,6 +73,19 @@
                 "sourcePortRange": "*",
                 "destinationAddressPrefix": "*"
             }
+          },
+          {
+            "name": "WorkerManager",
+            "properties": {
+                "priority": 1020,
+                "sourceAddressPrefix": "*",
+                "protocol": "TCP",
+                "destinationPortRange": "8060",
+                "access": "Allow",
+                "direction": "Inbound",
+                "sourcePortRange": "*",
+                "destinationAddressPrefix": "*"
+            }
           }
         ]
       }
