@@ -177,9 +177,11 @@ Trace-Log "Gateway download location: $gwPath"
 
 Download-Gateway $uri $gwPath
 Install-Gateway $gwPath
-Register-Gateway $gatewayKey
+
 
 $regkey = "hklm:\Software\Microsoft\DataTransfer\DataManagementGateway\HostService"
 Trace-Log "set externalhostname for gateway"
 Set-ItemProperty -Path $regkey -Name ExternalHostName -Value $vmdnsname
 Trace-Log "Successfully add VM DNS name $vmdnsname in Registry"
+
+Register-Gateway $gatewayKey
